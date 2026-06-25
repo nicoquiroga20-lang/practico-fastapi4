@@ -2,10 +2,10 @@ from fastapi import APIRouter, Path, Query, HTTPException
 from typing import Annotated
 from src.schemas.articulos import ArticuloSchema, ArticuloUpdateSchema
 
-router = APIRouter() # se instancia un router para los articulos, para modularizar
+router = APIRouter()
 
 not_found = {
-    404: { # se documenta el error 404 para la UI 
+    404: { 
         "description": "Artículo no encontrado en el sistema",
         "content": {
             "application/json": {
@@ -28,13 +28,13 @@ articulos = [
     {'id': 8, 'nombre_articulo': 'Teclado Redragon', 'precio': 85000, 'activo': True}
 ]
 
-@router.get('', response_model=list[ArticuloSchema]) # response_model documenta la respuesta esperada para la UI
+@router.get('', response_model=list[ArticuloSchema])
 async def get_articulos():
     return articulos
 
-@router.get('/{id}', responses=not_found, response_model=ArticuloSchema) # se documenta error 404, se documenta la respuesta esperada (filtrando el resultado antes de retornar)
+@router.get('/{id}', responses=not_found, response_model=ArticuloSchema)
 async def get_articulo_by_id(
-    id: Annotated[int, Path(gt=0, description='ID del articulo que deseas buscar')] # valida que el valor ingresado sea un entero positivo, el Path le agrega mas metadatos
+    id: Annotated[int, Path(gt=0, description='ID del articulo que deseas buscar')]
 ):
     for articulo in articulos:
         if articulo['id'] == id:
@@ -43,7 +43,7 @@ async def get_articulo_by_id(
 
 @router.post('', response_model=list[ArticuloSchema])
 async def post_articulo(articulo_nuevo: ArticuloSchema):
-    articulos.append(articulo_nuevo.model_dump()) # model_dump convierte el modelo de Pydantic a un diccionario para poder agregarlo a la lista de articulos
+    articulos.append(articulo_nuevo.model_dump())
     return articulos
 
 @router.delete('/{id}', responses=not_found, response_model=list[ArticuloSchema])
