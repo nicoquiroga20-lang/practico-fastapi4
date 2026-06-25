@@ -2,7 +2,7 @@ from fastapi import APIRouter, Path, Query, HTTPException
 from typing import Annotated
 from src.schemas.articulos import ArticuloSchema, ArticuloUpdateSchema
 
-router = APIRouter()
+router = APIRouter(prefix="/articulos")
 
 not_found = {
     404: { 
